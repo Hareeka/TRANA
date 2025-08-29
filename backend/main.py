@@ -1,5 +1,5 @@
 from fastapi import FastAPI, Depends
-from pydantic import BaseModel
+from backend import schemas
 from sqlalchemy.orm import Session
 from backend import database
 
@@ -32,8 +32,8 @@ class TrainingAnswerRequest(BaseModel):
 def root():
     return {"message": "TRANA Backend is running"}
 
-@app.post("/sos")
-def sos_alert(req: SOSRequest, db: Session = Depends(get_db)):
+@app.post("/sos", response_model=schemas.SOSResponse)
+def sos_alert(req: schemas.SOSRequest, db: Session = Depends(get_db)):
     alert = database.Alert(user_id=req.user_id, location=req.location)
     db.add(alert)
     db.commit()
@@ -44,8 +44,9 @@ def sos_alert(req: SOSRequest, db: Session = Depends(get_db)):
         "location": alert.location
     }
 
-@app.post("/training/answer")
-def submit_training(req: TrainingAnswerRequest, db: Session = Depends(get_db)):
+
+@app.post("/training/answer", response_model=schemas.TrainingAnswerResponse)
+def submit_training(req: schemas.TrainingAnswerRequest, db: Session = Depends(get_db)):
     training_answer = database.TrainingAnswer(
         user_id=req.user_id,
         question_id=req.question_id,
@@ -59,3 +60,4 @@ def submit_training(req: TrainingAnswerRequest, db: Session = Depends(get_db)):
         "status": "Answer saved",
         "id": training_answer.id
     }
+
