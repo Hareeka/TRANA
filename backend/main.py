@@ -1,6 +1,6 @@
 from fastapi import FastAPI, Depends
-from sqlalchemy.orm import Session
 from pydantic import BaseModel
+from sqlalchemy.orm import Session
 from backend import database
 
 app = FastAPI()
@@ -13,23 +13,21 @@ def get_db():
     finally:
         db.close()
 
-# -------------------------------
-# Pydantic Request Models
-# -------------------------------
-
+# ----------------------
+# Pydantic request models
+# ----------------------
 class SOSRequest(BaseModel):
     user_id: int
     location: str
 
-class TrainingRequest(BaseModel):
+class TrainingAnswerRequest(BaseModel):
     user_id: int
     question_id: int
     answer: str
 
-# -------------------------------
+# ----------------------
 # Endpoints
-# -------------------------------
-
+# ----------------------
 @app.get("/")
 def root():
     return {"message": "TRANA Backend is running"}
@@ -46,13 +44,13 @@ def sos_alert(req: SOSRequest, db: Session = Depends(get_db)):
         "location": alert.location
     }
 
-@app.post("/train")
-def submit_training(req: TrainingRequest, db: Session = Depends(get_db)):
+@app.post("/training/answer")
+def submit_training(req: TrainingAnswerRequest, db: Session = Depends(get_db)):
     training_answer = database.TrainingAnswer(
         user_id=req.user_id,
         question_id=req.question_id,
         answer=req.answer,
-        is_correct=False  # for now, later we’ll check against TrainingQuestions table
+        is_correct=False
     )
     db.add(training_answer)
     db.commit()
