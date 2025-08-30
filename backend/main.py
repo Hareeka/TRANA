@@ -20,6 +20,15 @@ def get_db():
 def root():
     return {"message": "TRANA Backend is running"}
 
+
+@app.get("/users")
+def get_users(db: Session = Depends(get_db)):
+    return db.query(database.User).all()
+
+@app.get("/training/questions")
+def get_questions(db: Session = Depends(get_db)):
+    return db.query(database.TrainingQuestion).all()
+
 @app.post("/sos")
 def sos_alert(req: schemas.SOSRequest, db: Session = Depends(get_db)):
     return crud.create_alert(db, req.user_id, req.location)
