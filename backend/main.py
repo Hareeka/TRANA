@@ -1,6 +1,7 @@
 from fastapi import FastAPI, Depends
 from sqlalchemy.orm import Session
-from backend import database, schemas, crud
+import database, schemas, crud
+
 
 app = FastAPI()
 
