@@ -25,9 +25,9 @@ def root():
 def get_users(db: Session = Depends(get_db)):
     return db.query(database.User).all()
 
-@app.get("/training/questions")
-def get_questions(db: Session = Depends(get_db)):
-    return db.query(database.TrainingQuestion).all()
+@app.post("/training/answer", response_model=schemas.TrainingAnswerResponse)
+def submit_training(req: schemas.TrainingAnswerRequest, db: Session = Depends(get_db)):
+    return crud.create_training_answer(db, req.user_id, req.question_id, req.answer)
 
 @app.post("/sos")
 def sos_alert(req: schemas.SOSRequest, db: Session = Depends(get_db)):
