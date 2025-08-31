@@ -20,9 +20,9 @@ def get_db():
 def root():
     return {"message": "TRANA Backend is running"}
 
-@app.get("/users")
-def get_users(db: Session = Depends(get_db)):
-    return db.query(database.User).all()
+@app.post("/users", response_model=schemas.UserCreate)
+def create_new_user(user: schemas.UserCreate, db: Session = Depends(get_db)):
+    return crud.create_user(db=db, user=user)
 
 # This is the correct endpoint for getting questions
 @app.get("/training/questions")
