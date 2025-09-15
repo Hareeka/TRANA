@@ -1,0 +1,59 @@
+# dynamic-ai-safety-coach-agent.yaml
+spec_version: 'v1'
+name: dynamic-ai-safety-coach
+description: "AI Safety Coach agent with Granite LLM integration."
+input:
+  description: "Incoming user message"
+  type: object
+  properties:
+    message:
+      type: string
+      description: "User input message"
+steps:
+  - id: StartGreeting
+    type: say
+    params:
+      text: >
+        Hello, I am your AI Safety Coach. Tell me how I can assist you right now.
+  - id: GetUserInput
+    type: listen
+    params:
+      slot: userResponse
+  - id: GraniteResponse
+    type: tool
+    tool: granite_llm
+
+    params:
+      tool_name: granite_llm
+      input: |
+        User message: {{steps.GetUserInput.output.userResponse}}
+        Context: Emergency assistant, provide calm and actionable advice.
+    next: SendResponse
+  - id: SendResponse
+    type: say
+    params:
+      # Use Granite LLM output as response text
+      text: "{{steps.GraniteResponse.output.generated_text}}"
+    next: CheckIfContinue
+  - id: CheckIfContinue
+    type: listen
+    params:
+      slot: continueChat
+    next: DecideNext
+  - id: DecideNext
+    type: switch
+    params:
+      cases:
+        - condition: 'steps.CheckIfContinue.output.continueChat.toLowerCase().includes("yes")'
+          next: GetUserInput
+      default: EndConversation
+  - id: EndConversation
+    type: say
+    params:
+      text: >
+        Thank you for using AI Safety Coach. Stay safe!
+    next: end
+tools:
+  - granite_llm
+
+    

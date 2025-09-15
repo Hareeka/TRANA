@@ -1,1 +1,6 @@
-fastapi uvicorn sqlalchemy pydantic
+fastapi
+uvicorn
+sqlalchemy
+pydantic
+alembic   # (optional, for DB migrations later)
+python-multipart  # (for file uploads, e.g. training videos)
