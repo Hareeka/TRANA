@@ -107,14 +107,14 @@ uvicorn main:app --reload
 
 text
 
-Access API docs at [http://localhost:8000/docs](http://localhost:8000/docs).
+Access API docs at [http://localhost:8000/docs](http://localhost:8001/docs).
 
 ---
 
 ## Usage
 
 - Launch backend server: `uvicorn main:app --reload`  
-- Use API docs for endpoints: [http://localhost:8000/docs](http://localhost:8000/docs)  
+- Use API docs for endpoints: [http://localhost:8000/docs](http://localhost:8001/docs)  
 - Connect frontend or mobile app for full deployment
 
 ---
