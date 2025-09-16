@@ -1,0 +1,10 @@
+import pandas as pd
+
+# Adapt these columns/data for your project:
+data = {
+    'id': [1, 2, 3],
+    'prediction': ['yes', 'no', 'yes']
+}
+
+df = pd.DataFrame(data)
+df.to_csv('submission.csv', index=False)
